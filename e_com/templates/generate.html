@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#generate-form').on('submit', function(event) {
+                event.preventDefault();
+                var number = $('#number').val();
+                $.ajax({
+                    url: '/generated-dummy-products/',
+                    type: 'POST',
+                    data: JSON.stringify({ number: number }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        alert('Dummy products generation started');
+                    },
+                    error: function(response) {
+                        alert('Error starting dummy products generation');
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            $('#products-table').DataTable({
+                "ajax": {
+                    "url": "/api/products/",
+                    "type": "GET",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "category.name" },
+                    { "data": "title" },
+                    { "data": "description" },
+                    { "data": "price" },
+                ]
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Generate Dummy Products</h1>
+    <form id="generate-form">
+        <label for="number">Number of Products:</label>
+        <input type="number" id="number" name="number" required>
+        <button type="submit">Generate</button>
+    </form>
+
+<h1>
+    Product list
+</h1>
+<table id="products-table" class="display"></table>
+<thead>
+<tr>
+    <th>ID</th>
+    <th>category</th>
+    <th>title</th>
+    <th>description</th>
+    <th>price</th>
+</tr>
+</thead>
+</body>
+</html>
